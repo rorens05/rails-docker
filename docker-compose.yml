@@ -4,6 +4,7 @@ services:
   db:
     restart: always
     image: mysql:5.7
+    platform: linux/x86_64
     volumes:
       - .tmp/db:/var/lib/mysql
     environment: 
@@ -16,12 +17,11 @@ services:
     image: redis:5.0.7
     volumes:
       - .tmp/redis:/var/lib/redis/data
-
   app: 
     restart: no
     build: .
     ports:
-      - 8000:8000
+      - 3000:3000
     working_dir: /app
     volumes:
       - ./:/app
