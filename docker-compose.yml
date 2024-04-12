@@ -1,0 +1,38 @@
+version: "3.7"
+
+services:
+  db:
+    restart: always
+    image: mysql:5.7
+    volumes:
+      - .tmp/db:/var/lib/mysql
+    environment: 
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: app
+      MYSQL_ROOT_HOST: '%'
+
+  redis:
+    restart: always
+    image: redis:5.0.7
+    volumes:
+      - .tmp/redis:/var/lib/redis/data
+
+  app: 
+    restart: no
+    build: .
+    ports:
+      - 8000:8000
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: bash -c "touch README.md && tail -f README.md"
+    env_file: 
+      - .env
+    depends_on:
+      - db
+      - redis
+    links:
+      - db
+      - redis
+  
+      
